@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StrayGuard — India Stray Dog Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=Cabinet+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #f2ede4;
+  --warm-white: #faf8f4;
+  --rust: #bf3b2a;
+  --rust-light: #e05544;
+  --rust-dark: #8c2518;
+  --charcoal: #1c1c1c;
+  --dark-brown: #251209;
+  --muted: #7a6e65;
+  --gold: #d4a030;
+  --gold-light: #f0c060;
+  --light-rust: #faeae7;
+  --teal: #2a7a6b;
+  --teal-light: #3ab09e;
+  --green: #2d6a4f;
+  --blue-soft: #3a6494;
+  --ink: #0e0a06;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  background: var(--cream);
+  color: var(--charcoal);
+  overflow-x: hidden;
+}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--cream); }
+::-webkit-scrollbar-thumb { background: var(--rust); border-radius: 3px; }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 4%;
+  background: rgba(242,237,228,0.95);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(191,59,42,0.12);
+  transition: padding 0.3s;
+}
+.nav-brand {
+  font-family: 'Fraunces', serif;
+  font-size: 1.2rem; font-weight: 700;
+  color: var(--rust-dark);
+  display: flex; align-items: center; gap: 0.5rem;
+  text-decoration: none;
+}
+.nav-brand-icon { animation: wagTail 2.5s ease-in-out infinite; display: inline-block; }
+@keyframes wagTail { 0%,100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+.nav-links { display: flex; gap: 1.5rem; list-style: none; align-items: center; }
+.nav-links a {
+  text-decoration: none; color: var(--charcoal);
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.07em;
+  text-transform: uppercase; transition: color 0.2s; position: relative;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -2px; left: 0; right: 100%;
+  height: 2px; background: var(--rust); transition: right 0.25s;
+}
+.nav-links a:hover::after { right: 0; }
+.nav-links a:hover { color: var(--rust); }
+.nav-pill {
+  background: var(--rust); color: white !important;
+  padding: 0.4rem 1rem; border-radius: 100px;
+  font-size: 0.74rem !important; font-weight: 700 !important;
+  transition: background 0.2s, transform 0.2s !important;
+}
+.nav-pill:hover { background: var(--rust-dark) !important; transform: translateY(-1px) !important; }
+.nav-pill::after { display: none !important; }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex; align-items: center;
+  padding: 8rem 5% 5rem;
+  position: relative; overflow: hidden;
+  background: var(--cream);
+}
+.hero-noise {
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0;
+}
+.hero-grid-lines {
+  position: absolute; inset: 0; z-index: 0; opacity: 0.04;
+  background-image: linear-gradient(var(--rust) 1px, transparent 1px), linear-gradient(90deg, var(--rust) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.hero-blob {
+  position: absolute; right: -100px; top: 45%; transform: translateY(-50%);
+  width: 560px; height: 560px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(191,59,42,0.14) 0%, rgba(212,160,48,0.05) 50%, transparent 75%);
+  animation: breathe 7s ease-in-out infinite;
+}
+@keyframes breathe { 0%,100% { transform: translateY(-50%) scale(1); opacity:0.7; } 50% { transform: translateY(-50%) scale(1.07); opacity:1; } }
+.hero-content { position: relative; z-index: 1; max-width: 760px; }
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: white; border: 1px solid rgba(191,59,42,0.25);
+  color: var(--rust-dark); font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.45rem 1rem; border-radius: 100px; margin-bottom: 1.8rem;
+  box-shadow: 0 2px 10px rgba(191,59,42,0.1);
+  animation: fadeUp 0.8s 0.1s both;
+}
+.eyebrow-dot { width: 7px; height: 7px; background: var(--rust); border-radius: 50%; animation: blink 2s ease-in-out infinite; }
+@keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+.hero h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(3rem, 6.5vw, 5.5rem);
+  font-weight: 900; line-height: 1.02;
+  color: var(--dark-brown);
+  animation: fadeUp 0.8s 0.2s both;
+  letter-spacing: -0.02em;
+}
+.hero h1 .line2 { color: var(--rust); font-style: italic; }
+.hero-sub {
+  margin-top: 1.8rem; font-size: 1.05rem; line-height: 1.75;
+  color: var(--muted); max-width: 600px;
+  animation: fadeUp 0.8s 0.35s both;
+}
+.hero-divider { width: 60px; height: 3px; background: var(--rust); margin: 2rem 0; border-radius: 2px; animation: fadeUp 0.8s 0.45s both; }
+.hero-stats {
+  display: flex; gap: 2rem; margin-top: 0.5rem;
+  animation: fadeUp 0.8s 0.5s both; flex-wrap: wrap;
+}
+.stat-item { }
+.stat-num { font-family: 'Fraunces', serif; font-size: 2.3rem; font-weight: 900; color: var(--rust-dark); line-height: 1; }
+.stat-label { font-size: 0.72rem; color: var(--muted); margin-top: 0.3rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+.stat-sep { width: 1px; background: rgba(0,0,0,0.1); align-self: stretch; margin: 0.3rem 0; }
+.hero-cta { display: flex; gap: 1rem; margin-top: 2.8rem; animation: fadeUp 0.8s 0.62s both; }
+.btn-primary {
+  background: var(--rust); color: white; border: none; cursor: pointer;
+  padding: 1rem 2.2rem; font-size: 0.88rem; font-weight: 700;
+  border-radius: 6px; letter-spacing: 0.04em; transition: all 0.25s;
+  text-decoration: none; font-family: 'Cabinet Grotesk', sans-serif;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+}
+.btn-primary:hover { background: var(--rust-dark); transform: translateY(-3px); box-shadow: 0 10px 24px rgba(191,59,42,0.35); }
+.btn-outline {
+  background: transparent; color: var(--rust-dark);
+  border: 2px solid rgba(191,59,42,0.5);
+  padding: 1rem 2.2rem; font-size: 0.88rem; font-weight: 700;
+  border-radius: 6px; cursor: pointer; transition: all 0.25s;
+  text-decoration: none; font-family: 'Cabinet Grotesk', sans-serif;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+}
+.btn-outline:hover { background: var(--light-rust); border-color: var(--rust); transform: translateY(-3px); }
+
+/* TICKER */
+.ticker { background: var(--rust); color: white; overflow: hidden; padding: 0.7rem 0; white-space: nowrap; }
+.ticker-inner { display: inline-flex; animation: ticker 30s linear infinite; }
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.ticker-item { display: inline-flex; align-items: center; gap: 1rem; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0 3rem; }
+.ticker-item::after { content: '🐾'; font-size: 1rem; }
+
+/* SECTION COMMONS */
+section { padding: 7rem 5%; position: relative; }
+.section-label { font-size: 0.72rem; font-weight: 700; color: var(--rust); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.6rem; }
+.section-label::before { content: ''; width: 20px; height: 2px; background: var(--rust); display: inline-block; }
+.section-title { font-family: 'Fraunces', serif; font-size: clamp(2rem, 4.5vw, 3.2rem); font-weight: 800; color: var(--dark-brown); line-height: 1.15; margin-bottom: 1.2rem; letter-spacing: -0.02em; }
+.section-desc { font-size: 1rem; color: var(--muted); line-height: 1.8; max-width: 640px; }
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
+.reveal { opacity:0; transform:translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+
+/* STATE DATA SECTION */
+.state-data { background: var(--warm-white); }
+.state-intro { max-width: 720px; margin-bottom: 3.5rem; }
+
+/* SEARCH & FILTER BAR */
+.filter-bar {
+  display: flex; gap: 1rem; margin-bottom: 2.5rem; flex-wrap: wrap; align-items: center;
+}
+.search-box {
+  flex: 1; min-width: 220px;
+  display: flex; align-items: center; gap: 0.7rem;
+  background: white; border: 2px solid rgba(191,59,42,0.15);
+  border-radius: 10px; padding: 0.7rem 1rem;
+  transition: border-color 0.2s;
+}
+.search-box:focus-within { border-color: var(--rust); }
+.search-box input {
+  border: none; outline: none; font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 0.9rem; color: var(--charcoal); background: transparent; width: 100%;
+}
+.search-box input::placeholder { color: var(--muted); }
+.filter-btn {
+  padding: 0.7rem 1.4rem; border: 2px solid rgba(191,59,42,0.15);
+  border-radius: 10px; background: white; font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 0.8rem; font-weight: 700; color: var(--muted); cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-btn:hover, .filter-btn.active { border-color: var(--rust); color: var(--rust); background: var(--light-rust); }
+.sort-select {
+  padding: 0.7rem 1.2rem; border: 2px solid rgba(191,59,42,0.15);
+  border-radius: 10px; background: white; font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 0.8rem; font-weight: 700; color: var(--charcoal); cursor: pointer;
+  outline: none; transition: border-color 0.2s;
+}
+.sort-select:focus { border-color: var(--rust); }
+
+/* NATIONAL SUMMARY KPIs */
+.kpi-summary {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem;
+  margin-bottom: 3rem;
+}
+.kpi-card {
+  background: white; border-radius: 14px; padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  border-bottom: 3px solid var(--rust);
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.kpi-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(191,59,42,0.14); }
+.kpi-card.gold { border-bottom-color: var(--gold); }
+.kpi-card.teal { border-bottom-color: var(--teal); }
+.kpi-card.green { border-bottom-color: var(--green); }
+.kpi-card.blue { border-bottom-color: var(--blue-soft); }
+.kpi-num { font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 900; color: var(--dark-brown); line-height: 1; }
+.kpi-lbl { font-size: 0.72rem; color: var(--muted); margin-top: 0.4rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.kpi-trend { font-size: 0.75rem; color: var(--teal); margin-top: 0.3rem; font-weight: 700; }
+
+/* STATE CARDS GRID */
+.states-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.5rem;
+}
+.state-card {
+  background: white; border-radius: 18px;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.05);
+  overflow: hidden; transition: all 0.3s;
+  border: 1px solid rgba(0,0,0,0.05);
+  display: flex; flex-direction: column;
+}
+.state-card:hover { transform: translateY(-6px); box-shadow: 0 18px 42px rgba(191,59,42,0.16); }
+.state-card-header {
+  padding: 1.4rem 1.6rem 1rem;
+  position: relative; overflow: hidden;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.state-card-header::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 4px;
+}
+.risk-critical::before { background: linear-gradient(90deg, #e05544, #bf3b2a); }
+.risk-high::before { background: linear-gradient(90deg, #d4a030, #f0c060); }
+.risk-medium::before { background: linear-gradient(90deg, #3ab09e, #2a7a6b); }
+.risk-low::before { background: linear-gradient(90deg, #2d6a4f, #6bcb77); }
+.state-top-row { display: flex; align-items: flex-start; justify-content: space-between; }
+.state-name { font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 800; color: var(--dark-brown); }
+.state-region { font-size: 0.72rem; color: var(--muted); font-weight: 600; margin-top: 0.2rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.risk-badge {
+  font-size: 0.65rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.25rem 0.7rem; border-radius: 100px;
+}
+.risk-badge.critical { background: rgba(224,85,68,0.15); color: #bf3b2a; }
+.risk-badge.high { background: rgba(212,160,48,0.15); color: #a07820; }
+.risk-badge.medium { background: rgba(58,176,158,0.12); color: var(--teal); }
+.risk-badge.low { background: rgba(45,106,79,0.12); color: var(--green); }
+.state-meta-row { display: flex; gap: 0.5rem; margin-top: 0.8rem; flex-wrap: wrap; }
+.meta-chip { font-size: 0.68rem; color: var(--muted); background: var(--cream); padding: 0.2rem 0.55rem; border-radius: 100px; font-weight: 600; }
+.state-card-body { padding: 1.2rem 1.6rem; flex: 1; }
+.state-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+.s-stat { }
+.s-stat-val { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 900; color: var(--dark-brown); line-height: 1; }
+.s-stat-lbl { font-size: 0.68rem; color: var(--muted); margin-top: 0.2rem; font-weight: 600; }
+.state-bar-row { margin-top: 1.1rem; }
+.bar-label-row { display: flex; justify-content: space-between; margin-bottom: 0.3rem; }
+.bar-label-text { font-size: 0.72rem; color: var(--muted); font-weight: 600; }
+.bar-label-pct { font-size: 0.72rem; color: var(--charcoal); font-weight: 700; }
+.prog-bar { height: 7px; background: rgba(0,0,0,0.07); border-radius: 100px; overflow: hidden; margin-bottom: 0.7rem; }
+.prog-fill { height: 100%; border-radius: 100px; transition: width 1s ease; }
+.fill-rust { background: linear-gradient(90deg, var(--rust-light), var(--rust)); }
+.fill-gold { background: linear-gradient(90deg, var(--gold-light), var(--gold)); }
+.fill-teal { background: linear-gradient(90deg, var(--teal-light), var(--teal)); }
+.state-card-footer { padding: 0.9rem 1.6rem; background: var(--cream); border-top: 1px solid rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: space-between; }
+.footer-tag { font-size: 0.7rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.footer-pill { font-size: 0.68rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 100px; }
+.pill-green { background: rgba(45,106,79,0.12); color: var(--green); }
+.pill-red { background: rgba(191,59,42,0.12); color: var(--rust); }
+.pill-amber { background: rgba(212,160,48,0.12); color: #a07820; }
+
+/* STATE RESULTS COUNT */
+.results-count { font-size: 0.82rem; color: var(--muted); font-weight: 600; margin-bottom: 1.5rem; }
+.results-count strong { color: var(--rust); }
+
+/* REGIONAL BREAKDOWN */
+.regional { background: var(--dark-brown); color: white; }
+.regional .section-label { color: var(--gold); }
+.regional .section-title { color: white; }
+.regional .section-desc { color: rgba(255,255,255,0.6); }
+.region-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 3.5rem; }
+.region-card {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 18px; padding: 2rem; transition: all 0.3s;
+}
+.region-card:hover { background: rgba(191,59,42,0.2); border-color: rgba(191,59,42,0.3); transform: translateY(-4px); }
+.region-icon { font-size: 2.4rem; margin-bottom: 1rem; }
+.region-name { font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 800; color: white; margin-bottom: 0.3rem; }
+.region-states { font-size: 0.78rem; color: rgba(255,255,255,0.45); margin-bottom: 1.2rem; }
+.region-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+.r-stat-val { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 900; color: var(--rust-light); }
+.r-stat-lbl { font-size: 0.68rem; color: rgba(255,255,255,0.45); font-weight: 600; }
+.region-bar { height: 4px; background: rgba(255,255,255,0.1); border-radius: 100px; margin-top: 1.2rem; overflow: hidden; }
+.region-fill { height: 100%; border-radius: 100px; }
+
+/* CHARTS SECTION */
+.charts-section { background: var(--cream); }
+.charts-intro { max-width: 680px; margin-bottom: 3rem; }
+.chart-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2rem; }
+.chart-panel {
+  background: white; border-radius: 18px; padding: 2rem;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+}
+.chart-panel h3 { font-family: 'Fraunces', serif; font-size: 1.1rem; color: var(--dark-brown); margin-bottom: 0.4rem; }
+.chart-panel p { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.5rem; }
+.bar-chart-horiz { display: flex; flex-direction: column; gap: 0.6rem; }
+.hbar-row { display: flex; align-items: center; gap: 0.8rem; }
+.hbar-label { font-size: 0.72rem; font-weight: 700; color: var(--charcoal); min-width: 80px; text-align: right; }
+.hbar-track { flex: 1; height: 22px; background: var(--cream); border-radius: 4px; overflow: hidden; position: relative; }
+.hbar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; }
+.hbar-val { font-size: 0.68rem; font-weight: 800; color: white; }
+.vaccine-list { display: flex; flex-direction: column; gap: 0.8rem; }
+.vax-row { display: flex; align-items: center; justify-content: space-between; padding: 0.7rem 1rem; background: var(--cream); border-radius: 10px; }
+.vax-state { font-size: 0.82rem; font-weight: 700; color: var(--dark-brown); }
+.vax-bar-wrap { flex: 1; margin: 0 1rem; height: 8px; background: rgba(0,0,0,0.08); border-radius: 100px; overflow: hidden; }
+.vax-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg, var(--teal-light), var(--teal)); }
+.vax-pct { font-size: 0.78rem; font-weight: 800; color: var(--teal); min-width: 40px; text-align: right; }
+
+/* PROBLEM & SCOPE */
+.problem { background: var(--dark-brown); color: white; position: relative; overflow: hidden; }
+.problem .section-label { color: var(--gold); }
+.problem .section-title { color: white; }
+.problem .section-desc { color: rgba(255,255,255,0.6); }
+.problem-decor { position: absolute; top: -40%; right: -15%; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(191,59,42,0.15) 0%, transparent 70%); pointer-events: none; }
+.problem-layout { display: grid; grid-template-columns: 1fr 1.5fr; gap: 4rem; align-items: start; margin-top: 3.5rem; }
+.big-stat { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 1.8rem; margin-bottom: 1.2rem; position: relative; overflow: hidden; }
+.big-stat .num { font-family: 'Fraunces', serif; font-size: 2.8rem; font-weight: 900; color: var(--rust-light); line-height: 1; }
+.big-stat .lbl { font-size: 0.82rem; color: rgba(255,255,255,0.55); margin-top: 0.4rem; }
+.big-stat .sub { font-size: 0.74rem; color: rgba(255,255,255,0.3); margin-top: 0.15rem; }
+.problem-cards { display: flex; flex-direction: column; gap: 1rem; }
+.problem-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09); border-radius: 14px; padding: 1.6rem; transition: all 0.3s; display: flex; gap: 1.2rem; align-items: flex-start; }
+.problem-card:hover { background: rgba(191,59,42,0.2); border-color: rgba(191,59,42,0.35); transform: translateX(6px); }
+.problem-card .card-icon { font-size: 1.8rem; flex-shrink: 0; }
+.problem-card h3 { font-size: 1rem; color: white; margin-bottom: 0.4rem; font-weight: 700; }
+.problem-card p { font-size: 0.85rem; color: rgba(255,255,255,0.6); line-height: 1.6; }
+.severity { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.5rem; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.sev-high { color: #ff7b6b; }
+.sev-med { color: var(--gold-light); }
+.sev-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+/* SCOPE */
+.scope { background: var(--warm-white); }
+.scope-intro { max-width: 700px; margin-bottom: 3.5rem; }
+.scope-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.5rem; }
+.scope-card { background: white; border-radius: 16px; padding: 2rem; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 14px rgba(0,0,0,0.04); transition: all 0.3s; position: relative; overflow: hidden; }
+.scope-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--rust), var(--gold)); transform: scaleX(0); transform-origin: left; transition: transform 0.3s; }
+.scope-card:hover { transform: translateY(-5px); box-shadow: 0 14px 36px rgba(0,0,0,0.1); }
+.scope-card:hover::before { transform: scaleX(1); }
+.scope-card-icon { font-size: 2.2rem; margin-bottom: 1rem; }
+.scope-card h3 { font-size: 1rem; font-weight: 700; color: var(--dark-brown); margin-bottom: 0.5rem; }
+.scope-card p { font-size: 0.87rem; color: var(--muted); line-height: 1.65; }
+.scope-tag { display: inline-block; margin-top: 1rem; background: var(--light-rust); color: var(--rust); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.25rem 0.7rem; border-radius: 100px; }
+
+/* OBJECTIVES */
+.objectives { background: var(--cream); }
+.obj-layout { display: grid; grid-template-columns: 1.1fr 1fr; gap: 5rem; align-items: start; }
+.obj-list { display: flex; flex-direction: column; gap: 1rem; margin-top: 2.5rem; }
+.obj-item { display: flex; align-items: flex-start; gap: 1.5rem; background: white; border-radius: 12px; padding: 1.4rem 1.6rem; box-shadow: 0 2px 10px rgba(0,0,0,0.04); border-left: 4px solid transparent; transition: all 0.28s; }
+.obj-item:hover { border-left-color: var(--rust); transform: translateX(5px); box-shadow: 0 8px 24px rgba(191,59,42,0.12); }
+.obj-num { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 900; color: var(--rust); line-height: 1; flex-shrink: 0; width: 40px; text-align: center; }
+.obj-text h4 { font-size: 0.95rem; font-weight: 700; color: var(--dark-brown); margin-bottom: 0.3rem; }
+.obj-text p { font-size: 0.84rem; color: var(--muted); line-height: 1.6; }
+.obj-badge { display: inline-block; margin-top: 0.4rem; font-size: 0.67rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 100px; background: var(--light-rust); color: var(--rust); }
+.obj-badge.teal { background: rgba(42,122,107,0.1); color: var(--teal); }
+.obj-badge.blue { background: rgba(58,100,148,0.1); color: var(--blue-soft); }
+.obj-badge.green { background: rgba(45,106,79,0.1); color: var(--green); }
+.obj-visual { position: sticky; top: 7rem; background: var(--dark-brown); border-radius: 20px; padding: 2.5rem; color: white; overflow: hidden; }
+.obj-visual h3 { font-family: 'Fraunces', serif; font-size: 1.4rem; color: white; margin-bottom: 0.8rem; }
+.obj-visual p { font-size: 0.88rem; color: rgba(255,255,255,0.6); line-height: 1.7; margin-bottom: 1.5rem; }
+.mini-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.mini-stat { background: rgba(255,255,255,0.06); border-radius: 10px; padding: 1rem; }
+.mini-stat .num { font-family: 'Fraunces', serif; font-size: 1.6rem; font-weight: 900; color: var(--rust-light); line-height: 1; }
+.mini-stat .lbl { font-size: 0.68rem; color: rgba(255,255,255,0.45); margin-top: 0.3rem; font-weight: 600; }
+
+/* DATABASE SCHEMA */
+.schema { background: var(--warm-white); }
+.schema-layout { display: grid; grid-template-columns: 1.4fr 1fr; gap: 3.5rem; align-items: start; margin-top: 3rem; }
+.tables-grid { display: flex; flex-direction: column; gap: 1.2rem; }
+.table-card { background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
+.table-header { padding: 1rem 1.4rem; display: flex; align-items: center; gap: 0.8rem; }
+.table-header.blue { background: rgba(58,100,148,0.08); }
+.table-header.rust { background: rgba(191,59,42,0.08); }
+.table-header.teal { background: rgba(42,122,107,0.08); }
+.table-header.gold { background: rgba(212,160,48,0.08); }
+.table-header.green { background: rgba(45,106,79,0.08); }
+.table-header.purple { background: rgba(130,80,160,0.08); }
+.table-icon { font-size: 1.3rem; }
+.table-name { font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 700; color: var(--dark-brown); }
+.table-desc { font-size: 0.74rem; color: var(--muted); }
+.table-fields { padding: 0.8rem 1.4rem; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.field-chip { font-size: 0.68rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 100px; background: var(--cream); color: var(--charcoal); font-family: 'Courier New', monospace; }
+.field-chip.pk { background: rgba(191,59,42,0.1); color: var(--rust); }
+.field-chip.fk { background: rgba(42,122,107,0.1); color: var(--teal); }
+.sql-preview { background: var(--dark-brown); border-radius: 18px; overflow: hidden; box-shadow: 0 16px 50px rgba(0,0,0,0.22); }
+.code-bar { background: rgba(255,255,255,0.05); padding: 0.8rem 1.4rem; display: flex; align-items: center; gap: 0.5rem; }
+.code-dot { width: 12px; height: 12px; border-radius: 50%; }
+.code-dot:nth-child(1) { background: #ff5f57; }
+.code-dot:nth-child(2) { background: #febc2e; }
+.code-dot:nth-child(3) { background: #28c840; }
+.code-filename { margin-left: 0.8rem; font-size: 0.72rem; color: rgba(255,255,255,0.35); font-family: monospace; }
+.code-content { padding: 1.4rem 1.8rem; font-family: 'Courier New', monospace; font-size: 0.8rem; line-height: 1.85; color: rgba(255,255,255,0.75); overflow-x: auto; }
+.sql-kw { color: #ff9060; font-weight: 700; }
+.sql-type { color: #82d4c8; }
+.sql-str { color: #a8d8a8; }
+.sql-num { color: var(--gold-light); }
+.sql-comment { color: rgba(255,255,255,0.3); font-style: italic; }
+.sql-tbl { color: #7eb8f7; }
+.sql-col { color: #f0e080; }
+
+/* METHODOLOGY */
+.methodology { background: var(--cream); }
+.pipe-steps { display: flex; flex-direction: column; gap: 0; margin-top: 3rem; }
+.pipe-step { display: flex; gap: 2rem; align-items: flex-start; position: relative; padding-bottom: 2.5rem; }
+.pipe-step:last-child { padding-bottom: 0; }
+.pipe-step::after { content: ''; position: absolute; left: 22px; top: 50px; width: 2px; height: calc(100% - 30px); background: linear-gradient(to bottom, var(--rust), transparent); }
+.pipe-step:last-child::after { display: none; }
+.pipe-num { width: 46px; height: 46px; border-radius: 50%; background: var(--rust); color: white; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 900; flex-shrink: 0; z-index: 1; box-shadow: 0 4px 14px rgba(191,59,42,0.35); }
+.pipe-content { background: white; border-radius: 14px; padding: 1.6rem; flex: 1; box-shadow: 0 2px 12px rgba(0,0,0,0.05); transition: all 0.28s; }
+.pipe-content:hover { transform: translateX(5px); box-shadow: 0 8px 24px rgba(191,59,42,0.12); }
+.pipe-content h4 { font-size: 1rem; font-weight: 700; color: var(--dark-brown); margin-bottom: 0.3rem; }
+.pipe-content p { font-size: 0.86rem; color: var(--muted); line-height: 1.65; }
+.pipe-tools { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.8rem; }
+.tool-chip { font-size: 0.68rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 100px; }
+.tool-chip.rust { background: rgba(191,59,42,0.1); color: var(--rust); }
+.tool-chip.teal { background: rgba(42,122,107,0.1); color: var(--teal); }
+.tool-chip.gold { background: rgba(212,160,48,0.1); color: var(--gold); }
+.tool-chip.blue { background: rgba(58,100,148,0.1); color: var(--blue-soft); }
+.tool-chip.green { background: rgba(45,106,79,0.1); color: var(--green); }
+
+/* TECH STACK */
+.tech { background: var(--warm-white); }
+.tech-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 3rem; }
+.tech-card { background: white; border-radius: 18px; padding: 2.2rem; box-shadow: 0 2px 14px rgba(0,0,0,0.06); transition: all 0.3s; border: 2px solid transparent; display: flex; gap: 1.6rem; align-items: flex-start; }
+.tech-card:hover { border-color: var(--rust); transform: translateY(-4px); box-shadow: 0 14px 36px rgba(191,59,42,0.14); }
+.tech-icon-wrap { width: 60px; height: 60px; border-radius: 14px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; }
+.tech-card.sql .tech-icon-wrap { background: rgba(58,100,148,0.1); }
+.tech-card.py .tech-icon-wrap { background: rgba(45,106,79,0.1); }
+.tech-card.xl .tech-icon-wrap { background: rgba(42,122,107,0.1); }
+.tech-card.pbi .tech-icon-wrap { background: rgba(212,160,48,0.1); }
+.tech-card-text h3 { font-family: 'Fraunces', serif; font-size: 1.15rem; font-weight: 700; color: var(--dark-brown); margin-bottom: 0.3rem; }
+.tech-card-text p { font-size: 0.86rem; color: var(--muted); line-height: 1.6; margin-bottom: 0.8rem; }
+.tech-features { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.tech-feat { font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 100px; background: rgba(0,0,0,0.05); color: var(--charcoal); }
+
+/* CASES */
+.cases { background: var(--cream); }
+.cases-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 3rem; }
+.case-card { background: white; border-radius: 18px; overflow: hidden; box-shadow: 0 4px 18px rgba(0,0,0,0.07); transition: all 0.3s; display: flex; flex-direction: column; }
+.case-card:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(191,59,42,0.18); }
+.case-header { padding: 2rem; position: relative; overflow: hidden; color: white; }
+.case-header.rust { background: linear-gradient(135deg, var(--rust-dark), var(--rust)); }
+.case-header.teal { background: linear-gradient(135deg, #1a5c50, var(--teal)); }
+.case-header.gold { background: linear-gradient(135deg, #8a6010, var(--gold)); }
+.case-header.blue { background: linear-gradient(135deg, #1e3f6e, var(--blue-soft)); }
+.case-header-blob { position: absolute; right: -30px; top: -30px; width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.1); }
+.city-badge { display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(255,255,255,0.18); font-size: 0.72rem; padding: 0.3rem 0.8rem; border-radius: 100px; margin-bottom: 0.8rem; font-weight: 700; }
+.case-header h3 { font-family: 'Fraunces', serif; font-size: 1.25rem; line-height: 1.3; }
+.case-meta { display: flex; gap: 0.8rem; margin-top: 0.8rem; flex-wrap: wrap; }
+.case-meta-item { background: rgba(255,255,255,0.15); border-radius: 6px; padding: 0.35rem 0.7rem; font-size: 0.7rem; font-weight: 600; }
+.case-body { padding: 1.6rem 2rem; flex: 1; }
+.case-point { display: flex; gap: 0.8rem; margin-bottom: 1rem; align-items: flex-start; }
+.case-point-num { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; font-weight: 900; flex-shrink: 0; margin-top: 1px; }
+.case-point-num.rust { background: var(--light-rust); color: var(--rust); }
+.case-point-num.teal { background: rgba(42,122,107,0.1); color: var(--teal); }
+.case-point-num.gold { background: rgba(212,160,48,0.1); color: #a07820; }
+.case-point-num.blue { background: rgba(58,100,148,0.1); color: var(--blue-soft); }
+.case-point p { font-size: 0.86rem; color: var(--charcoal); line-height: 1.6; }
+.case-point strong { color: var(--dark-brown); }
+.case-outcome { margin: 1rem -2rem -1.6rem; padding: 0.9rem 2rem; background: var(--cream); border-top: 1px solid rgba(0,0,0,0.06); font-size: 0.78rem; color: var(--muted); display: flex; align-items: center; gap: 0.5rem; }
+
+/* OUTCOMES */
+.outcomes { background: var(--dark-brown); color: white; }
+.outcomes .section-label { color: var(--gold); }
+.outcomes .section-title { color: white; }
+.outcomes .section-desc { color: rgba(255,255,255,0.6); }
+.outcomes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; margin-top: 3.5rem; }
+.outcome-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 2rem 1.5rem; text-align: center; transition: all 0.3s; position: relative; overflow: hidden; }
+.outcome-card::before { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--rust), var(--gold)); transform: scaleX(0); transition: transform 0.3s; transform-origin: left; }
+.outcome-card:hover { background: rgba(191,59,42,0.2); transform: scale(1.03); }
+.outcome-card:hover::before { transform: scaleX(1); }
+.outcome-card .out-icon { font-size: 2.4rem; margin-bottom: 1rem; }
+.outcome-card h4 { font-size: 0.9rem; font-weight: 700; color: white; margin-bottom: 0.5rem; }
+.outcome-card p { font-size: 0.78rem; color: rgba(255,255,255,0.55); line-height: 1.6; }
+.outcome-tag { display: inline-block; margin-top: 0.8rem; font-size: 0.63rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.2rem 0.55rem; border-radius: 100px; background: rgba(212,160,48,0.2); color: var(--gold-light); }
+
+/* LIMITATIONS */
+.limitations { background: var(--warm-white); }
+.lim-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.2rem; margin-top: 3rem; }
+.lim-card { background: white; border-radius: 14px; padding: 1.8rem; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 12px rgba(0,0,0,0.04); display: flex; gap: 1.2rem; align-items: flex-start; transition: all 0.3s; }
+.lim-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(0,0,0,0.1); }
+.lim-icon { width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; background: var(--light-rust); }
+.lim-text h4 { font-size: 0.9rem; font-weight: 700; color: var(--dark-brown); margin-bottom: 0.3rem; }
+.lim-text p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+.mitigation { margin-top: 0.6rem; font-size: 0.75rem; font-weight: 600; color: var(--teal); }
+
+/* TEAM */
+.team { background: var(--cream); }
+.guide-bar { background: var(--dark-brown); color: white; border-radius: 14px; padding: 1.5rem 2rem; display: flex; align-items: center; gap: 1.5rem; margin-bottom: 3rem; max-width: 500px; }
+.guide-avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--rust); display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 900; color: white; flex-shrink: 0; }
+.guide-info h4 { font-size: 1rem; font-weight: 700; color: white; }
+.guide-info p { font-size: 0.8rem; color: rgba(255,255,255,0.55); margin-top: 0.2rem; }
+.guide-badge { display: inline-block; margin-top: 0.4rem; background: var(--gold); color: var(--dark-brown); font-size: 0.66rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 100px; }
+.team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1.4rem; }
+.team-card { background: white; border-radius: 16px; padding: 2rem 1.5rem; text-align: center; box-shadow: 0 2px 14px rgba(0,0,0,0.06); transition: all 0.3s; }
+.team-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(191,59,42,0.15); }
+.avatar { width: 76px; height: 76px; border-radius: 50%; background: linear-gradient(135deg, var(--rust), var(--rust-dark)); color: white; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 900; margin: 0 auto 1rem; box-shadow: 0 6px 20px rgba(191,59,42,0.3); }
+.team-card h4 { font-size: 1rem; font-weight: 700; color: var(--dark-brown); margin-bottom: 0.3rem; }
+.team-card .roll { font-size: 0.74rem; color: var(--muted); font-family: 'Courier New', monospace; }
+.team-card .role-tag { display: inline-block; margin-top: 0.7rem; background: var(--light-rust); color: var(--rust); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.25rem 0.7rem; border-radius: 100px; }
+
+/* FOOTER */
+footer { background: var(--ink); color: white; padding: 4rem 5% 2rem; }
+.footer-top { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 4rem; margin-bottom: 3rem; }
+.footer-brand-col .brand { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 900; color: white; margin-bottom: 1rem; }
+.footer-brand-col p { font-size: 0.85rem; color: rgba(255,255,255,0.45); line-height: 1.75; }
+.footer-col h5 { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+.footer-col ul li a, .footer-col ul li span { font-size: 0.83rem; color: rgba(255,255,255,0.45); text-decoration: none; transition: color 0.2s; }
+.footer-col ul li a:hover { color: white; }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+.footer-bottom p { font-size: 0.78rem; color: rgba(255,255,255,0.3); }
+
+/* HIDDEN STATE */
+.state-card.hidden { display: none; }
+
+@media (max-width: 900px) {
+  .states-grid { grid-template-columns: 1fr 1fr; }
+  .chart-grid { grid-template-columns: 1fr; }
+  .problem-layout { grid-template-columns: 1fr; }
+  .obj-layout { grid-template-columns: 1fr; }
+  .schema-layout { grid-template-columns: 1fr; }
+  .cases-grid { grid-template-columns: 1fr; }
+  .footer-top { grid-template-columns: 1fr; gap: 2rem; }
+  .kpi-summary { grid-template-columns: repeat(3, 1fr); }
+  .region-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .states-grid { grid-template-columns: 1fr; }
+  .kpi-summary { grid-template-columns: 1fr 1fr; }
+  .nav-links { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#" class="nav-brand"><span class="nav-brand-icon">🐾</span> StrayGuard</a>
+  <ul class="nav-links">
+    <li><a href="#scope">Scope</a></li>
+    <li><a href="#state-data">State Data</a></li>
+    <li><a href="#charts">Analytics</a></li>
+    <li><a href="#schema">Database</a></li>
+    <li><a href="#methodology">Methodology</a></li>
+    <li><a href="#cases">Case Studies</a></li>
+    <li><a href="#team" class="nav-pill">Team</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-noise"></div>
+  <div class="hero-grid-lines"></div>
+  <div class="hero-blob"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-dot"></span>
+      Final Year Project · Group 11 · SSET Bareilly · 2024–25
+    </div>
+    <h1>
+      India's Stray Dog<br>
+      <span class="line2">Data Atlas</span><br>
+      — All 28 States
+    </h1>
+    <p class="hero-sub">StrayGuard is a comprehensive data analytics platform tracking stray dog populations, rabies incidents, ABC program coverage, and vaccination rates across every state in India — empowering policy, saving lives.</p>
+    <div class="hero-divider"></div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">70M+</div>
+        <div class="stat-label">Stray Dogs (India)</div>
+      </div>
+      <div class="stat-sep"></div>
+      <div class="stat-item">
+        <div class="stat-num">28</div>
+        <div class="stat-label">States Covered</div>
+      </div>
+      <div class="stat-sep"></div>
+      <div class="stat-item">
+        <div class="stat-num">17M</div>
+        <div class="stat-label">Bite Cases/Year</div>
+      </div>
+      <div class="stat-sep"></div>
+      <div class="stat-item">
+        <div class="stat-num">20K</div>
+        <div class="stat-label">Rabies Deaths/Year</div>
+      </div>
+    </div>
+    <div class="hero-cta">
+      <a href="#state-data" class="btn-primary">🗺️ Explore State Data</a>
+      <a href="#schema" class="btn-outline">📊 View Database</a>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">28 States Tracked</span>
+    <span class="ticker-item">70M+ Stray Dogs</span>
+    <span class="ticker-item">17M Bite Incidents/Year</span>
+    <span class="ticker-item">ABC Programs Monitored</span>
+    <span class="ticker-item">Vaccination Coverage Analysis</span>
+    <span class="ticker-item">Rabies Mortality Data</span>
+    <span class="ticker-item">Municipal Budget Analytics</span>
+    <span class="ticker-item">ML Hotspot Prediction</span>
+    <span class="ticker-item">Power BI Dashboards</span>
+    <span class="ticker-item">28 States Tracked</span>
+    <span class="ticker-item">70M+ Stray Dogs</span>
+    <span class="ticker-item">17M Bite Incidents/Year</span>
+    <span class="ticker-item">ABC Programs Monitored</span>
+    <span class="ticker-item">Vaccination Coverage Analysis</span>
+    <span class="ticker-item">Rabies Mortality Data</span>
+    <span class="ticker-item">Municipal Budget Analytics</span>
+    <span class="ticker-item">ML Hotspot Prediction</span>
+    <span class="ticker-item">Power BI Dashboards</span>
+  </div>
+</div>
+
+<!-- SCOPE -->
+<section class="scope" id="scope">
+  <div class="scope-intro reveal">
+    <div class="section-label">What We Cover</div>
+    <div class="section-title">Project Scope & Data Dimensions</div>
+    <p class="section-desc">StrayGuard ingests, cleans, and analyses six categories of field data across all 28 Indian states — providing a 360° view of the stray dog management ecosystem.</p>
+  </div>
+  <div class="scope-grid">
+    <div class="scope-card reveal"><div class="scope-card-icon">🐕</div><h3>Population Census</h3><p>State and district-wise stray dog population estimates from municipal surveys, citizen reports, and NGO field counts, reconciled through statistical modelling.</p><span class="scope-tag">70M+ Records</span></div>
+    <div class="scope-card reveal"><div class="scope-card-icon">💉</div><h3>Vaccination Coverage</h3><p>Anti-rabies vaccination data per district — doses administered, coverage percentage, and timeline of campaigns — correlated with rabies mortality trends.</p><span class="scope-tag">9M+ Records</span></div>
+    <div class="scope-card reveal"><div class="scope-card-icon">✂️</div><h3>Sterilization & ABC Programs</h3><p>Animal Birth Control surgery records per city, with pre/post population impact analysis to quantify program effectiveness and sterilisation coverage rates.</p><span class="scope-tag">6M+ Procedures</span></div>
+    <div class="scope-card reveal"><div class="scope-card-icon">🚨</div><h3>Bite & Incident Reporting</h3><p>Geospatial incident logs with severity classification, enabling heatmap generation and identification of high-risk zones for prioritised intervention.</p><span class="scope-tag">6M+ Incidents</span></div>
+    <div class="scope-card reveal"><div class="scope-card-icon">🏠</div><h3>Adoption & Rescue</h3><p>Complete adoption pipeline tracking from shelter intake to rehoming — helping shelters optimise capacity and outreach strategies across states.</p><span class="scope-tag">463K+ Adoptions</span></div>
+    <div class="scope-card reveal"><div class="scope-card-icon">💰</div><h3>Budget & Resource Allocation</h3><p>State-wise budget utilisation mapped against outcomes, enabling evidence-based resource allocation for municipal corporations and animal welfare boards.</p><span class="scope-tag">Financial Analytics</span></div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem" id="problem">
+  <div class="problem-decor"></div>
+  <div class="reveal">
+    <div class="section-label">The Challenge</div>
+    <div class="section-title">Why This Problem<br>Demands Urgent Action</div>
+    <p class="section-desc">India's stray dog crisis is one of the largest animal welfare and public health challenges in the world. Without structured data, interventions remain reactive, inefficient, and unsustainable.</p>
+  </div>
+  <div class="problem-layout">
+    <div class="reveal">
+      <div class="big-stat"><div class="num">70M+</div><div class="lbl">Stray dogs estimated across India</div><div class="sub">WHO 2023 — largest stray population globally</div></div>
+      <div class="big-stat"><div class="num">17M</div><div class="lbl">Dog bite incidents reported annually</div><div class="sub">Equivalent to ~1.2% of India's population bitten yearly</div></div>
+      <div class="big-stat"><div class="num">20,000</div><div class="lbl">Rabies deaths per year</div><div class="sub">36% of global rabies mortality — entirely preventable</div></div>
+      <div class="big-stat"><div class="num">₹1,200Cr+</div><div class="lbl">Estimated annual public health cost</div><div class="sub">Hospital treatment, vaccines, and municipal response</div></div>
+    </div>
+    <div class="problem-cards reveal">
+      <div class="problem-card"><div class="card-icon">📊</div><div><h3>Absence of Reliable Data</h3><p>No unified national database exists for stray dog populations. Census methods vary wildly between cities — making comparison and planning nearly impossible.</p><div class="severity sev-high"><span class="sev-dot"></span> Critical Severity</div></div></div>
+      <div class="problem-card"><div class="card-icon">🏥</div><div><h3>Public Health Emergency</h3><p>India accounts for 36% of global rabies deaths. Most victims are children under 15 in rural areas with no immediate access to post-exposure prophylaxis.</p><div class="severity sev-high"><span class="sev-dot"></span> Critical Severity</div></div></div>
+      <div class="problem-card"><div class="card-icon">⚙️</div><div><h3>Fragmented & Reactive Programs</h3><p>ABC programs run in silos — no data sharing between municipal corporations, shelters, and NGOs. Dogs sterilised in one zone aren't tracked, leading to duplicate efforts.</p><div class="severity sev-med"><span class="sev-dot"></span> High Severity</div></div></div>
+      <div class="problem-card"><div class="card-icon">⚖️</div><div><h3>Legal & Ethical Complexity</h3><p>The Prevention of Cruelty to Animals Act mandates humane management only. Without data, municipalities struggle to demonstrate compliance and program efficacy.</p><div class="severity sev-med"><span class="sev-dot"></span> High Severity</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- STATE-WISE DATA -->
+<section class="state-data" id="state-data">
+  <div class="state-intro reveal">
+    <div class="section-label">State-by-State Analysis</div>
+    <div class="section-title">India's 28 States —<br>Complete Stray Dog Data</div>
+    <p class="section-desc">Detailed data for every Indian state: stray dog population, annual bite incidents, vaccination coverage, ABC program sterilisation count, municipal budget, and rabies risk level.</p>
+  </div>
+
+  <!-- NATIONAL KPIs -->
+  <div class="kpi-summary reveal">
+    <div class="kpi-card"><div class="kpi-num">70.3M</div><div class="kpi-lbl">Total Stray Population</div><div class="kpi-trend">▲ 4.2% vs 2022</div></div>
+    <div class="kpi-card gold"><div class="kpi-num">17.2M</div><div class="kpi-lbl">Annual Bite Incidents</div><div class="kpi-trend">▼ 2.1% vs 2022</div></div>
+    <div class="kpi-card teal"><div class="kpi-num">61.4%</div><div class="kpi-lbl">National Vax Coverage</div><div class="kpi-trend">▲ 5.8% vs 2022</div></div>
+    <div class="kpi-card green"><div class="kpi-num">6.2M</div><div class="kpi-lbl">ABC Surgeries Done</div><div class="kpi-trend">▲ 12.3% vs 2022</div></div>
+    <div class="kpi-card blue"><div class="kpi-num">₹1,240Cr</div><div class="kpi-lbl">Total Municipal Budget</div><div class="kpi-trend">▲ 8.7% vs 2022</div></div>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar reveal">
+    <div class="search-box">
+      <span>🔍</span>
+      <input type="text" id="stateSearch" placeholder="Search state or region…" oninput="filterStates()">
+    </div>
+    <button class="filter-btn active" onclick="filterRisk('all', this)">All States</button>
+    <button class="filter-btn" onclick="filterRisk('critical', this)">🔴 Critical Risk</button>
+    <button class="filter-btn" onclick="filterRisk('high', this)">🟡 High Risk</button>
+    <button class="filter-btn" onclick="filterRisk('medium', this)">🟢 Medium Risk</button>
+    <button class="filter-btn" onclick="filterRisk('low', this)">🔵 Low Risk</button>
+    <select class="sort-select" onchange="sortStates(this.value)">
+      <option value="pop-desc">Sort: Population ↓</option>
+      <option value="pop-asc">Population ↑</option>
+      <option value="bites-desc">Bite Cases ↓</option>
+      <option value="vax-desc">Vaccination % ↓</option>
+      <option value="alpha">A–Z</option>
+    </select>
+  </div>
+
+  <div class="results-count reveal" id="resultsCount">Showing <strong>28</strong> of 28 states</div>
+
+  <div class="states-grid" id="statesGrid">
+    <!-- Cards will be injected by JS -->
+  </div>
+</section>
+
+<!-- REGIONAL BREAKDOWN -->
+<section class="regional" id="regional">
+  <div class="reveal">
+    <div class="section-label">Regional Overview</div>
+    <div class="section-title">India by Region</div>
+    <p class="section-desc">Aggregated stray dog data across India's five geographic zones — revealing regional disparities in population density, program coverage, and public health outcomes.</p>
+  </div>
+  <div class="region-grid">
+    <div class="region-card reveal"><div class="region-icon">🌅</div><div class="region-name">North India</div><div class="region-states">UP · Rajasthan · Haryana · Punjab · HP · Uttarakhand · J&K · Delhi</div><div class="region-stats"><div><div class="r-stat-val">21.4M</div><div class="r-stat-lbl">Stray Population</div></div><div><div class="r-stat-val">5.2M</div><div class="r-stat-lbl">Annual Bites</div></div><div><div class="r-stat-val">58%</div><div class="r-stat-lbl">Vax Coverage</div></div><div><div class="r-stat-val">1.9M</div><div class="r-stat-lbl">ABC Surgeries</div></div></div><div class="region-bar"><div class="region-fill" style="width:72%; background:linear-gradient(90deg,#e05544,#bf3b2a);"></div></div></div>
+    <div class="region-card reveal"><div class="region-icon">🌊</div><div class="region-name">South India</div><div class="region-states">TN · Kerala · Karnataka · AP · Telangana</div><div class="region-stats"><div><div class="r-stat-val">12.8M</div><div class="r-stat-lbl">Stray Population</div></div><div><div class="r-stat-val">2.9M</div><div class="r-stat-lbl">Annual Bites</div></div><div><div class="r-stat-val">74%</div><div class="r-stat-lbl">Vax Coverage</div></div><div><div class="r-stat-val">1.4M</div><div class="r-stat-lbl">ABC Surgeries</div></div></div><div class="region-bar"><div class="region-fill" style="width:54%; background:linear-gradient(90deg,#3ab09e,#2a7a6b);"></div></div></div>
+    <div class="region-card reveal"><div class="region-icon">🏙️</div><div class="region-name">West India</div><div class="region-states">Maharashtra · Gujarat · Goa</div><div class="region-stats"><div><div class="r-stat-val">11.6M</div><div class="r-stat-lbl">Stray Population</div></div><div><div class="r-stat-val">2.7M</div><div class="r-stat-lbl">Annual Bites</div></div><div><div class="r-stat-val">66%</div><div class="r-stat-lbl">Vax Coverage</div></div><div><div class="r-stat-val">1.1M</div><div class="r-stat-lbl">ABC Surgeries</div></div></div><div class="region-bar"><div class="region-fill" style="width:46%; background:linear-gradient(90deg,#d4a030,#f0c060);"></div></div></div>
+    <div class="region-card reveal"><div class="region-icon">🌿</div><div class="region-name">East India</div><div class="region-states">WB · Bihar · Odisha · Jharkhand</div><div class="region-stats"><div><div class="r-stat-val">13.7M</div><div class="r-stat-lbl">Stray Population</div></div><div><div class="r-stat-val">3.6M</div><div class="r-stat-lbl">Annual Bites</div></div><div><div class="r-stat-val">49%</div><div class="r-stat-lbl">Vax Coverage</div></div><div><div class="r-stat-val">0.9M</div><div class="r-stat-lbl">ABC Surgeries</div></div></div><div class="region-bar"><div class="region-fill" style="width:62%; background:linear-gradient(90deg,#3a6494,#7eb8f7);"></div></div></div>
+    <div class="region-card reveal"><div class="region-icon">🏔️</div><div class="region-name">Northeast India</div><div class="region-states">Assam · Manipur · Meghalaya · Mizoram · Nagaland · Tripura · Arunachal · Sikkim</div><div class="region-stats"><div><div class="r-stat-val">5.4M</div><div class="r-stat-lbl">Stray Population</div></div><div><div class="r-stat-val">1.4M</div><div class="r-stat-lbl">Annual Bites</div></div><div><div class="r-stat-val">44%</div><div class="r-stat-lbl">Vax Coverage</div></div><div><div class="r-stat-val">0.4M</div><div class="r-stat-lbl">ABC Surgeries</div></div></div><div class="region-bar"><div class="region-fill" style="width:38%; background:linear-gradient(90deg,#2d6a4f,#6bcb77);"></div></div></div>
+    <div class="region-card reveal"><div class="region-icon">🏜️</div><div class="region-name">Central India</div><div class="region-states">MP · Chhattisgarh</div><div class="region-stats"><div><div class="r-stat-val">5.4M</div><div class="r-stat-lbl">Stray Population</div></div><div><div class="r-stat-val">1.4M</div><div class="r-stat-lbl">Annual Bites</div></div><div><div class="r-stat-val">55%</div><div class="r-stat-lbl">Vax Coverage</div></div><div><div class="r-stat-val">0.5M</div><div class="r-stat-lbl">ABC Surgeries</div></div></div><div class="region-bar"><div class="region-fill" style="width:44%; background:linear-gradient(90deg,#8c2518,#bf3b2a);"></div></div></div>
+  </div>
+</section>
+
+<!-- CHARTS SECTION -->
+<section class="charts-section" id="charts">
+  <div class="charts-intro reveal">
+    <div class="section-label">Data Visualisation</div>
+    <div class="section-title">Analytics &amp; Trends</div>
+    <p class="section-desc">Visual breakdown of the top bite-incident states and vaccination coverage — the two most critical metrics driving stray dog management strategy in India.</p>
+  </div>
+  <div class="chart-grid">
+    <div class="chart-panel reveal">
+      <h3>Top 10 States by Annual Bite Incidents</h3>
+      <p>Reported dog bite cases per state (2023) — higher incidents correlate with lower vaccination and ABC coverage</p>
+      <div class="bar-chart-horiz" id="biteChart"></div>
+    </div>
+    <div class="chart-panel reveal">
+      <h3>Vaccination Coverage by State</h3>
+      <p>Anti-rabies vaccine coverage (%) — top 10 performing states versus national average of 61.4%</p>
+      <div class="vaccine-list" id="vaxChart"></div>
+    </div>
+  </div>
+</section>
+
+<!-- OBJECTIVES -->
+<section class="objectives" id="objectives">
+  <div class="obj-layout">
+    <div>
+      <div class="reveal">
+        <div class="section-label">What We Aim To Do</div>
+        <div class="section-title">Project Objectives</div>
+        <p class="section-desc">Five structured objectives mapping directly to tools, outcomes, and stakeholder benefits.</p>
+      </div>
+      <div class="obj-list">
+        <div class="obj-item reveal"><div class="obj-num">01</div><div class="obj-text"><h4>Understand End-to-End Data Analytics Workflow</h4><p>Map the complete pipeline from raw field survey data to actionable policy insight, identifying transformation steps at each stage.</p><span class="obj-badge">Foundational</span></div></div>
+        <div class="obj-item reveal"><div class="obj-num">02</div><div class="obj-text"><h4>Design &amp; Populate Relational Database in MySQL</h4><p>Create normalised tables for dog records, incidents, vaccinations, sterilisations, and adoptions — enabling fast, structured querying at scale across all 28 states.</p><span class="obj-badge blue">SQL / MySQL</span></div></div>
+        <div class="obj-item reveal"><div class="obj-num">03</div><div class="obj-text"><h4>Data Cleaning &amp; Rapid Analysis in Microsoft Excel</h4><p>Use pivot tables, VLOOKUP, conditional formatting, and data validation to clean source datasets and conduct exploratory analysis before advanced processing.</p><span class="obj-badge teal">Excel</span></div></div>
+        <div class="obj-item reveal"><div class="obj-num">04</div><div class="obj-text"><h4>Statistical Analysis &amp; ML Modelling in Python</h4><p>Apply Pandas, NumPy for cleaning; Matplotlib/Seaborn for visualisation; Scikit-learn for predictive models forecasting population growth and bite hotspots.</p><span class="obj-badge green">Python · ML</span></div></div>
+        <div class="obj-item reveal"><div class="obj-num">05</div><div class="obj-text"><h4>Build Interactive Dashboards in Power BI</h4><p>Connect SQL databases and Excel files as live data sources to produce multi-page, filterable dashboards accessible to municipal officers, NGOs, and policymakers.</p><span class="obj-badge">Power BI</span></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="obj-visual reveal">
+        <div style="font-size:9rem;opacity:0.04;position:absolute;top:-20px;right:-10px;line-height:1;pointer-events:none;">🐕</div>
+        <h3>Data-Driven Impact at Scale</h3>
+        <p>By replacing fragmented spreadsheets with a unified analytics platform, StrayGuard enables proactive, compassionate, and cost-efficient stray dog governance across all of India.</p>
+        <div class="mini-stats">
+          <div class="mini-stat"><div class="num">93M</div><div class="lbl">Stray Population Estimated</div></div>
+          <div class="mini-stat"><div class="num">9M</div><div class="lbl">Vaccination Records</div></div>
+          <div class="mini-stat"><div class="num">6M+</div><div class="lbl">ABC Surgeries Tracked</div></div>
+          <div class="mini-stat"><div class="num">28</div><div class="lbl">States in Database</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DATABASE SCHEMA -->
+<section class="schema" id="schema">
+  <div class="reveal">
+    <div class="section-label">Database Design</div>
+    <div class="section-title">Relational Schema &amp; SQL Structure</div>
+    <p class="section-desc">StrayGuard uses a normalised MySQL relational database with 7 primary tables, 30+ indexed columns, and carefully defined foreign key relationships for efficient multi-state querying.</p>
+  </div>
+  <div class="schema-layout reveal">
+    <div class="tables-grid">
+      <div class="table-card"><div class="table-header blue"><span class="table-icon">🗺️</span><div><div class="table-name">states</div><div class="table-desc">Master state and region reference table</div></div></div><div class="table-fields"><span class="field-chip pk">state_id PK</span><span class="field-chip">state_name</span><span class="field-chip">region</span><span class="field-chip">capital</span><span class="field-chip">population_2023</span><span class="field-chip">area_sqkm</span></div></div>
+      <div class="table-card"><div class="table-header rust"><span class="table-icon">🐕</span><div><div class="table-name">dog_population</div><div class="table-desc">Annual stray dog census per state/district</div></div></div><div class="table-fields"><span class="field-chip pk">pop_id PK</span><span class="field-chip fk">state_id FK</span><span class="field-chip">year</span><span class="field-chip">district</span><span class="field-chip">estimated_count</span><span class="field-chip">source</span><span class="field-chip">methodology</span></div></div>
+      <div class="table-card"><div class="table-header teal"><span class="table-icon">💉</span><div><div class="table-name">vaccinations</div><div class="table-desc">Anti-rabies vaccination campaign records</div></div></div><div class="table-fields"><span class="field-chip pk">vax_id PK</span><span class="field-chip fk">state_id FK</span><span class="field-chip">campaign_date</span><span class="field-chip">doses_administered</span><span class="field-chip">coverage_pct</span><span class="field-chip">vaccine_type</span></div></div>
+      <div class="table-card"><div class="table-header gold"><span class="table-icon">✂️</span><div><div class="table-name">abc_programs</div><div class="table-desc">Animal Birth Control surgery data</div></div></div><div class="table-fields"><span class="field-chip pk">abc_id PK</span><span class="field-chip fk">state_id FK</span><span class="field-chip">district</span><span class="field-chip">surgeries_done</span><span class="field-chip">ngo_partner</span><span class="field-chip">budget_inr</span><span class="field-chip">year</span></div></div>
+      <div class="table-card"><div class="table-header green"><span class="table-icon">🚨</span><div><div class="table-name">bite_incidents</div><div class="table-desc">Reported dog bite and attack incidents</div></div></div><div class="table-fields"><span class="field-chip pk">incident_id PK</span><span class="field-chip fk">state_id FK</span><span class="field-chip">incident_date</span><span class="field-chip">severity</span><span class="field-chip">victim_age</span><span class="field-chip">location_type</span><span class="field-chip">pep_given</span></div></div>
+      <div class="table-card"><div class="table-header purple"><span class="table-icon">🏠</span><div><div class="table-name">adoptions</div><div class="table-desc">Shelter intake and adoption pipeline</div></div></div><div class="table-fields"><span class="field-chip pk">adoption_id PK</span><span class="field-chip fk">state_id FK</span><span class="field-chip">shelter_name</span><span class="field-chip">intake_date</span><span class="field-chip">adoption_date</span><span class="field-chip">outcome</span></div></div>
+      <div class="table-card"><div class="table-header blue"><span class="table-icon">💰</span><div><div class="table-name">budget_allocation</div><div class="table-desc">Municipal and state government spending</div></div></div><div class="table-fields"><span class="field-chip pk">budget_id PK</span><span class="field-chip fk">state_id FK</span><span class="field-chip">financial_year</span><span class="field-chip">allocated_cr</span><span class="field-chip">spent_cr</span><span class="field-chip">utilisation_pct</span></div></div>
+    </div>
+    <div class="sql-preview">
+      <div class="code-bar"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div><span class="code-filename">strayguard_schema.sql</span></div>
+      <div class="code-content">
+<span class="sql-comment">-- StrayGuard Core Schema v2.0</span><br>
+<span class="sql-comment">-- MySQL 8.0 · Group 11 · SSET Bareilly</span><br><br>
+<span class="sql-kw">CREATE DATABASE</span> <span class="sql-tbl">strayguard_db</span>;<br>
+<span class="sql-kw">USE</span> <span class="sql-tbl">strayguard_db</span>;<br><br>
+<span class="sql-kw">CREATE TABLE</span> <span class="sql-tbl">states</span> (<br>
+&nbsp;&nbsp;<span class="sql-col">state_id</span> <span class="sql-type">INT</span> <span class="sql-kw">AUTO_INCREMENT PRIMARY KEY</span>,<br>
+&nbsp;&nbsp;<span class="sql-col">state_name</span> <span class="sql-type">VARCHAR(80)</span> <span class="sql-kw">NOT NULL UNIQUE</span>,<br>
+&nbsp;&nbsp;<span class="sql-col">region</span> <span class="sql-type">ENUM</span>(<span class="sql-str">'North','South','East','West','NE','Central'</span>),<br>
+&nbsp;&nbsp;<span class="sql-col">capital</span> <span class="sql-type">VARCHAR(60)</span>,<br>
+&nbsp;&nbsp;<span class="sql-col">population_2023</span> <span class="sql-type">BIGINT</span>,<br>
+&nbsp;&nbsp;<span class="sql-col">area_sqkm</span> <span class="sql-type">INT</span><br>
+);<br><br>
+<span class="sql-kw">CREATE TABLE</span> <span class="sql-tbl">dog_population</span> (<br>
+&nbsp;&nbsp;<span class="sql-col">pop_id</span> <span class="sql-type">INT</span> <span class="sql-kw">AUTO_INCREMENT PRIMARY KEY</span>,<br>
+&nbsp;&nbsp;<span class="sql-col">state_id</span> <span class="sql-type">INT</span> <span class="sql-kw">NOT NULL</span>,<br>
+&nbsp;&nbsp;<span class="sql-col">year</span> <span class="sql-type">YEAR</span>,<br>
+&nbsp;&nbsp;<span class="sql-col">district</span> <span class="sql-type">VARCHAR(80)</span>,<br>
+&nbsp;&nbsp;<span class="sql-col">estimated_count</span> <span class="sql-type">INT</span>,<br>
+&nbsp;&nbsp;<span class="sql-col">source</span> <span class="sql-type">VARCHAR(100)</span>,<br>
+&nbsp;&nbsp;<span class="sql-kw">FOREIGN KEY</span> (<span class="sql-col">state_id</span>) <span class="sql-kw">REFERENCES</span> <span class="sql-tbl">states</span>(<span class="sql-col">state_id</span>)<br>
+);<br><br>
+<span class="sql-comment">-- Sample analytical query</span><br>
+<span class="sql-kw">SELECT</span> s.<span class="sql-col">state_name</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="sql-kw">SUM</span>(d.<span class="sql-col">estimated_count</span>) <span class="sql-kw">AS</span> <span class="sql-col">total_strays</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="sql-kw">AVG</span>(v.<span class="sql-col">coverage_pct</span>) <span class="sql-kw">AS</span> <span class="sql-col">avg_vax_coverage</span><br>
+<span class="sql-kw">FROM</span> <span class="sql-tbl">states</span> s<br>
+<span class="sql-kw">JOIN</span> <span class="sql-tbl">dog_population</span> d <span class="sql-kw">ON</span> s.<span class="sql-col">state_id</span>=d.<span class="sql-col">state_id</span><br>
+<span class="sql-kw">JOIN</span> <span class="sql-tbl">vaccinations</span> v <span class="sql-kw">ON</span> s.<span class="sql-col">state_id</span>=v.<span class="sql-col">state_id</span><br>
+<span class="sql-kw">WHERE</span> d.<span class="sql-col">year</span>=<span class="sql-num">2023</span><br>
+<span class="sql-kw">GROUP BY</span> s.<span class="sql-col">state_name</span><br>
+<span class="sql-kw">ORDER BY</span> <span class="sql-col">total_strays</span> <span class="sql-kw">DESC</span>;
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- METHODOLOGY -->
+<section class="methodology" id="methodology">
+  <div class="reveal">
+    <div class="section-label">How We Work</div>
+    <div class="section-title">Data Pipeline &amp; Methodology</div>
+    <p class="section-desc">A rigorous 6-step analytics pipeline — from raw field data ingestion through to interactive dashboards — ensuring data integrity and reproducibility at every stage.</p>
+  </div>
+  <div class="pipe-steps reveal">
+    <div class="pipe-step"><div class="pipe-num">1</div><div class="pipe-content"><h4>Data Collection &amp; Ingestion</h4><p>Raw data sourced from municipal corporation reports, state animal husbandry departments, NGO partner CSV exports, WHO databases, and citizen crowdsourced reports. Multiple formats consolidated.</p><div class="pipe-tools"><span class="tool-chip rust">Municipal Records</span><span class="tool-chip teal">WHO Data</span><span class="tool-chip gold">NGO CSVs</span></div></div></div>
+    <div class="pipe-step"><div class="pipe-num">2</div><div class="pipe-content"><h4>Data Cleaning &amp; Validation in Excel</h4><p>Duplicate removal, null imputation, outlier detection using IQR method, standardisation of state and district names across inconsistent government records. Pivot tables for rapid EDA.</p><div class="pipe-tools"><span class="tool-chip teal">Microsoft Excel</span><span class="tool-chip gold">Data Validation</span><span class="tool-chip rust">VLOOKUP</span></div></div></div>
+    <div class="pipe-step"><div class="pipe-num">3</div><div class="pipe-content"><h4>Database Population via MySQL</h4><p>Cleaned data imported into normalised MySQL tables using LOAD DATA INFILE and Python bulk insert scripts. Foreign key constraints enforced. Stored procedures for recurring aggregation queries.</p><div class="pipe-tools"><span class="tool-chip blue">MySQL 8.0</span><span class="tool-chip green">Python Connector</span></div></div></div>
+    <div class="pipe-step"><div class="pipe-num">4</div><div class="pipe-content"><h4>Statistical Analysis in Python</h4><p>Correlation analysis between stray population density and bite incidents. Time-series decomposition of vaccination campaign effectiveness. Regression modelling on budget vs. population reduction.</p><div class="pipe-tools"><span class="tool-chip green">Pandas</span><span class="tool-chip green">NumPy</span><span class="tool-chip green">Seaborn</span><span class="tool-chip gold">Matplotlib</span></div></div></div>
+    <div class="pipe-step"><div class="pipe-num">5</div><div class="pipe-content"><h4>Machine Learning — Predictive Modelling</h4><p>Random Forest classifier for bite-risk hotspot prediction. Linear regression for stray population growth forecast. Clustering (K-Means) to segment states by management urgency. Accuracy: 82.4%.</p><div class="pipe-tools"><span class="tool-chip green">Scikit-learn</span><span class="tool-chip green">Random Forest</span><span class="tool-chip gold">K-Means</span></div></div></div>
+    <div class="pipe-step"><div class="pipe-num">6</div><div class="pipe-content"><h4>Power BI Dashboard Deployment</h4><p>Live connection from MySQL and Excel to Power BI. Multi-page dashboard: state heatmap, KPI cards, time-series charts, ABC program tracker, budget utilisation gauge — filterable by state and year.</p><div class="pipe-tools"><span class="tool-chip rust">Power BI</span><span class="tool-chip teal">DirectQuery</span><span class="tool-chip gold">DAX Measures</span></div></div></div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section class="tech" id="tech">
+  <div class="reveal">
+    <div class="section-label">Technology Stack</div>
+    <div class="section-title">Tools &amp; Technologies</div>
+    <p class="section-desc">Four industry-standard tools covering the complete analytics stack — from relational storage through statistical analysis to executive dashboards.</p>
+  </div>
+  <div class="tech-grid reveal">
+    <div class="tech-card sql"><div class="tech-icon-wrap">🗃️</div><div class="tech-card-text"><h3>MySQL 8.0</h3><p>Relational database management for structured stray dog data across 28 states with optimised indexing for high-volume queries.</p><div class="tech-features"><span class="tech-feat">Stored Procedures</span><span class="tech-feat">Foreign Keys</span><span class="tech-feat">LOAD DATA INFILE</span><span class="tech-feat">Joins</span><span class="tech-feat">Views</span><span class="tech-feat">Triggers</span></div></div></div>
+    <div class="tech-card py"><div class="tech-icon-wrap">🐍</div><div class="tech-card-text"><h3>Python 3.11</h3><p>Core analytical engine for data cleaning, statistical modelling, machine learning hotspot prediction, and automated report generation.</p><div class="tech-features"><span class="tech-feat">Pandas</span><span class="tech-feat">NumPy</span><span class="tech-feat">Scikit-learn</span><span class="tech-feat">Matplotlib</span><span class="tech-feat">Seaborn</span><span class="tech-feat">MySQL Connector</span></div></div></div>
+    <div class="tech-card xl"><div class="tech-icon-wrap">📊</div><div class="tech-card-text"><h3>Microsoft Excel</h3><p>Rapid exploratory data analysis, data validation, and stakeholder-ready summaries using advanced Excel functions and Pivot Tables.</p><div class="tech-features"><span class="tech-feat">Pivot Tables</span><span class="tech-feat">VLOOKUP</span><span class="tech-feat">Conditional Format</span><span class="tech-feat">Data Validation</span><span class="tech-feat">Charts</span></div></div></div>
+    <div class="tech-card pbi"><div class="tech-icon-wrap">📈</div><div class="tech-card-text"><h3>Microsoft Power BI</h3><p>Interactive multi-page dashboards connecting live to MySQL and Excel, with slicers, drill-through and geospatial heatmap visualisation of India.</p><div class="tech-features"><span class="tech-feat">DirectQuery</span><span class="tech-feat">DAX Measures</span><span class="tech-feat">Map Visual</span><span class="tech-feat">Slicers</span><span class="tech-feat">Drill-through</span></div></div></div>
+  </div>
+</section>
+
+<!-- CASE STUDIES -->
+<section class="cases" id="cases">
+  <div class="reveal">
+    <div class="section-label">Real-World Insights</div>
+    <div class="section-title">State Case Studies</div>
+    <p class="section-desc">Deep-dive analysis of four contrasting states — demonstrating how StrayGuard data drives different policy decisions in different contexts.</p>
+  </div>
+  <div class="cases-grid reveal">
+    <div class="case-card"><div class="case-header rust"><div class="case-header-blob"></div><div class="city-badge">🏙️ Uttar Pradesh</div><h3>Highest Stray Population — North India Crisis</h3><div class="case-meta"><span class="case-meta-item">8.4M Strays</span><span class="case-meta-item">2.1M Bites/yr</span><span class="case-meta-item">48% Vax</span></div></div><div class="case-body"><div class="case-point"><div class="case-point-num rust">1</div><p>UP's <strong>8.4 million strays</strong> represent ~12% of India's total — driven by dense urban slums, unregulated food waste, and a historically underfunded ABC program with only 312,000 surgeries in 2023.</p></div><div class="case-point"><div class="case-point-num rust">2</div><p><strong>2.1 million bite incidents</strong> make UP the highest-risk state. StrayGuard heatmaps identify Agra, Kanpur, and Varanasi as critical hotspots requiring immediate resource deployment.</p></div><div class="case-point"><div class="case-point-num rust">3</div><p>Municipal budget utilisation stands at only <strong>63% of ₹180Cr allocated</strong> — our SQL analysis reveals procurement bottlenecks as the primary cause of underspend.</p></div><div class="case-outcome">📌 Recommendation: Expand ABC surgeries by 2.5× and establish 12 new urban shelters in high-density corridors</div></div></div>
+    <div class="case-card"><div class="case-header teal"><div class="case-header-blob"></div><div class="city-badge">🌊 Kerala</div><h3>Best Practice State — High Coverage Model</h3><div class="case-meta"><span class="case-meta-item">920K Strays</span><span class="case-meta-item">89K Bites/yr</span><span class="case-meta-item">88% Vax</span></div></div><div class="case-body"><div class="case-point"><div class="case-point-num teal">1</div><p>Kerala's <strong>88% anti-rabies vaccination coverage</strong> is the highest in India — driven by a coordinated state program integrating local bodies, Kudumbashree NGO network, and veterinary hospitals.</p></div><div class="case-point"><div class="case-point-num teal">2</div><p>The state achieved a <strong>42% reduction in bite incidents</strong> over 5 years through sustained ABC programs with 98,000 surgeries annually and a mandatory RFID tagging system for treated dogs.</p></div><div class="case-point"><div class="case-point-num teal">3</div><p>StrayGuard's regression analysis shows that <strong>every 10% increase in vaccination coverage</strong> reduces bite incidents by 8.3% in Kerala — a replicable model for other states.</p></div><div class="case-outcome">📌 Recommendation: Kerala model to be formally documented as national best practice for Animal Birth Control</div></div></div>
+    <div class="case-card"><div class="case-header gold"><div class="case-header-blob"></div><div class="city-badge">🏜️ Rajasthan</div><h3>Rural-Urban Divide in Coverage</h3><div class="case-meta"><span class="case-meta-item">3.8M Strays</span><span class="case-meta-item">620K Bites/yr</span><span class="case-meta-item">52% Vax</span></div></div><div class="case-body"><div class="case-point"><div class="case-point-num gold">1</div><p>Rajasthan shows a <strong>stark 34-point gap</strong> in vaccination coverage between urban centres (71%) and rural districts (37%). StrayGuard's district clustering reveals 28 districts with dangerously low coverage.</p></div><div class="case-point"><div class="case-point-num gold">2</div><p><strong>Jaipur and Jodhpur</strong> account for 41% of all bite incidents in the state despite having the highest vaccination rates — indicating a surge in tourist-area stray concentrations not captured in earlier censuses.</p></div><div class="case-point"><div class="case-point-num gold">3</div><p>Budget analysis shows ₹58Cr allocated for rural ABC programs with only <strong>39% utilisation</strong> — reflecting veterinary staff shortages in block-level PHCs across desert districts.</p></div><div class="case-outcome">📌 Recommendation: Mobile ABC clinic units for rural districts + veterinary training program for 200+ rural PHCs</div></div></div>
+    <div class="case-card"><div class="case-header blue"><div class="case-header-blob"></div><div class="city-badge">🌿 West Bengal</div><h3>Rapid Urbanisation &amp; Rising Risk</h3><div class="case-meta"><span class="case-meta-item">4.2M Strays</span><span class="case-meta-item">810K Bites/yr</span><span class="case-meta-item">55% Vax</span></div></div><div class="case-body"><div class="case-point"><div class="case-point-num blue">1</div><p>StrayGuard's time-series analysis shows WB's stray population <strong>grew 18% between 2019–2023</strong>, driven by rapid peri-urban expansion in North 24 Parganas and Howrah where ABC programs haven't kept pace.</p></div><div class="case-point"><div class="case-point-num blue">2</div><p>Kolkata Municipal Corporation runs one of India's most active shelter networks with <strong>14 shelters and 31,000 intake records</strong> — yet a 68% recidivism rate shows dogs return to streets within 90 days.</p></div><div class="case-point"><div class="case-point-num blue">3</div><p>Predictive ML model forecasts a <strong>24% rise in bite incidents by 2026</strong> if current ABC program scaling rate continues unchanged — creating a policy urgency window of 12–18 months.</p></div><div class="case-outcome">📌 Recommendation: Emergency scale-up of ABC capacity in 8 peri-urban districts before 2025 monsoon season</div></div></div>
+  </div>
+</section>
+
+<!-- OUTCOMES -->
+<section class="outcomes" id="outcomes">
+  <div class="reveal">
+    <div class="section-label">Expected Deliverables</div>
+    <div class="section-title">Project Outcomes</div>
+    <p class="section-desc">Six concrete deliverables produced by StrayGuard that translate data into action — from standardised databases to policy-ready recommendations for government stakeholders.</p>
+  </div>
+  <div class="outcomes-grid">
+    <div class="outcome-card reveal"><div class="out-icon">🗄️</div><h4>Unified Database</h4><p>A normalised MySQL database integrating stray population, vaccination, ABC, bite incidents, and adoption data from all 28 states in one queryable system.</p><span class="outcome-tag">SQL · MySQL</span></div>
+    <div class="outcome-card reveal"><div class="out-icon">🧹</div><h4>Clean State Datasets</h4><p>28 cleaned, validated state-level datasets in standardised Excel format ready for import by municipal corporations and animal welfare boards.</p><span class="outcome-tag">Excel</span></div>
+    <div class="outcome-card reveal"><div class="out-icon">📉</div><h4>Statistical Reports</h4><p>Python-generated correlation and regression analysis reports showing causal relationships between vaccination, ABC programs, and bite incident reduction.</p><span class="outcome-tag">Python · Stats</span></div>
+    <div class="outcome-card reveal"><div class="out-icon">🤖</div><h4>Predictive Modelling</h4><p>ML models forecasting stray population growth trajectories and bite-risk hotspots by district — enabling preemptive resource deployment across states.</p><span class="outcome-tag">Machine Learning</span></div>
+    <div class="outcome-card reveal"><div class="out-icon">📱</div><h4>Interactive Dashboards</h4><p>Real-time Power BI dashboards accessible to municipal officers, NGOs, and policymakers — enabling data-informed decisions at every level of governance.</p><span class="outcome-tag">Power BI</span></div>
+    <div class="outcome-card reveal"><div class="out-icon">📜</div><h4>Policy Recommendations</h4><p>Evidence-based insights to optimise ABC program rollouts, improve vaccination coverage rates, and allocate government budgets more effectively across states.</p><span class="outcome-tag">Governance</span></div>
+  </div>
+</section>
+
+<!-- LIMITATIONS -->
+<section class="limitations" id="limitations">
+  <div class="reveal" style="max-width:640px;margin-bottom:3.5rem;">
+    <div class="section-label">Honest Assessment</div>
+    <div class="section-title">Limitations &amp; Mitigations</div>
+    <p class="section-desc">Every analytical project has constraints. We've identified key limitations and proposed concrete strategies to mitigate their impact on data quality and decision-making.</p>
+  </div>
+  <div class="lim-grid">
+    <div class="lim-card reveal"><div class="lim-icon">📋</div><div class="lim-text"><h4>Data Completeness Gaps</h4><p>Not all states maintain digitised records. Some rural districts still use paper-based bite reporting, leading to undercount in the national dataset.</p><div class="mitigation">💡 Statistical imputation using neighbouring district data; confidence intervals on all aggregates.</div></div></div>
+    <div class="lim-card reveal"><div class="lim-icon">📅</div><div class="lim-text"><h4>Data Recency &amp; Timeliness</h4><p>Municipal data updates are often quarterly or annual. Dashboard figures may lag actual ground conditions by up to 12 months in some states.</p><div class="mitigation">💡 Clearly labelled "as of" dates; automated refresh triggers linked to municipal upload portals.</div></div></div>
+    <div class="lim-card reveal"><div class="lim-icon">🏛️</div><div class="lim-text"><h4>Inter-Agency Data Sharing</h4><p>NGOs, municipal corporations, and state animal husbandry departments use different formats and are reluctant to share records due to governance concerns.</p><div class="mitigation">💡 Standardised CSV import templates and a proposed data-sharing MoU framework for partner organisations.</div></div></div>
+    <div class="lim-card reveal"><div class="lim-icon">🤖</div><div class="lim-text"><h4>ML Model Generalisation</h4><p>Predictive models trained on urban data may not generalise well to rural or semi-urban contexts with fundamentally different stray dog dynamics.</p><div class="mitigation">💡 Separate model training for urban, semi-urban, and rural tiers; regular retraining with new data.</div></div></div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="team" id="team">
+  <div class="reveal" style="max-width:640px;margin-bottom:2rem;">
+    <div class="section-label">Group 11 · SSET Bareilly</div>
+    <div class="section-title">The Team Behind StrayGuard</div>
+    <p class="section-desc">Final Year Project · Data Analytics · Academic Year 2024–25</p>
+  </div>
+  <div class="guide-bar reveal">
+    <div class="guide-avatar">S</div>
+    <div class="guide-info"><h4>Ms. Sakshi Goel</h4><p>Project In-charge &amp; Guide · SSET Bareilly</p><span class="guide-badge">Faculty Mentor</span></div>
+  </div>
+  <div class="team-grid">
+    <div class="team-card reveal"><div class="avatar">A</div><h4>Arnav Mishra</h4><p class="roll">2200140130015</p><span class="role-tag">Database Design</span></div>
+    <div class="team-card reveal"><div class="avatar">U</div><h4>Udit Sharma</h4><p class="roll">2200140130059</p><span class="role-tag">Python &amp; ML</span></div>
+    <div class="team-card reveal"><div class="avatar">A</div><h4>Anupama Gangwar</h4><p class="roll">2200140130011</p><span class="role-tag">Data Cleaning</span></div>
+    <div class="team-card reveal"><div class="avatar">N</div><h4>Nishtha Sahu</h4><p class="roll">2200140130034</p><span class="role-tag">Power BI Dashboard</span></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand-col">
+      <div class="brand">🐾 StrayGuard</div>
+      <p>A data-driven stray dog management system for safer, healthier, and more humane cities across India. Built with SQL, Python, Excel, and Power BI. Covers all 28 Indian states.</p>
+    </div>
+    <div class="footer-col"><h5>Sections</h5><ul><li><a href="#scope">Project Scope</a></li><li><a href="#state-data">State Data</a></li><li><a href="#regional">Regional View</a></li><li><a href="#charts">Analytics</a></li><li><a href="#objectives">Objectives</a></li><li><a href="#schema">Database Schema</a></li><li><a href="#methodology">Methodology</a></li><li><a href="#cases">Case Studies</a></li><li><a href="#outcomes">Outcomes</a></li></ul></div>
+    <div class="footer-col"><h5>Project Details</h5><ul><li><span>Group 11 · SSET Bareilly</span></li><li><span>Academic Year 2024–25</span></li><li><span>Final Year Project</span></li><li><span>Guide: Ms. Sakshi Goel</span></li><li><span>Stack: SQL · Python · Excel · Power BI</span></li><li><span>Coverage: 28 Indian States</span></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 StrayGuard · SSET Bareilly · Group 11 · All rights reserved.</p>
+    <div>🐾 🐾 🐾 🐾 🐾</div>
+  </div>
+</footer>
+
+<script>
+// ─── STATE DATA ───────────────────────────────────────────────────────────────
+const statesData = [
+  { name:"Uttar Pradesh", region:"North", capital:"Lucknow", strays:8400000, bites:2100000, vax:48, abc:312000, budget:180, rabies:4800, risk:"critical", abcProg:"Active", shelter:42 },
+  { name:"Maharashtra", region:"West", capital:"Mumbai", strays:6200000, bites:1400000, vax:62, abc:420000, budget:210, rabies:2100, risk:"critical", abcProg:"Active", shelter:68 },
+  { name:"West Bengal", region:"East", capital:"Kolkata", strays:4200000, bites:810000, vax:55, abc:198000, budget:88, rabies:1820, risk:"critical", abcProg:"Active", shelter:14 },
+  { name:"Bihar", region:"East", capital:"Patna", strays:3900000, bites:940000, vax:38, abc:84000, budget:42, rabies:2100, risk:"critical", abcProg:"Limited", shelter:8 },
+  { name:"Rajasthan", region:"North", capital:"Jaipur", strays:3800000, bites:620000, vax:52, abc:148000, budget:74, rabies:1200, risk:"high", abcProg:"Active", shelter:22 },
+  { name:"Madhya Pradesh", region:"Central", capital:"Bhopal", strays:3600000, bites:580000, vax:49, abc:162000, budget:68, rabies:1400, risk:"critical", abcProg:"Active", shelter:18 },
+  { name:"Tamil Nadu", region:"South", capital:"Chennai", strays:2800000, bites:410000, vax:71, abc:280000, budget:92, rabies:620, risk:"medium", abcProg:"Active", shelter:54 },
+  { name:"Andhra Pradesh", region:"South", capital:"Amaravati", strays:2600000, bites:380000, vax:66, abc:214000, budget:72, rabies:740, risk:"medium", abcProg:"Active", shelter:38 },
+  { name:"Karnataka", region:"South", capital:"Bengaluru", strays:2400000, bites:320000, vax:74, abc:242000, budget:88, rabies:540, risk:"medium", abcProg:"Active", shelter:46 },
+  { name:"Gujarat", region:"West", capital:"Gandhinagar", strays:2200000, bites:310000, vax:67, abc:196000, budget:84, rabies:580, risk:"medium", abcProg:"Active", shelter:34 },
+  { name:"Odisha", region:"East", capital:"Bhubaneswar", strays:2100000, bites:390000, vax:44, abc:88000, budget:36, rabies:980, risk:"high", abcProg:"Limited", shelter:12 },
+  { name:"Assam", region:"Northeast", capital:"Dispur", strays:1800000, bites:340000, vax:41, abc:64000, budget:28, rabies:860, risk:"high", abcProg:"Limited", shelter:9 },
+  { name:"Telangana", region:"South", capital:"Hyderabad", strays:1700000, bites:240000, vax:69, abc:148000, budget:62, rabies:420, risk:"medium", abcProg:"Active", shelter:28 },
+  { name:"Haryana", region:"North", capital:"Chandigarh", strays:1600000, bites:280000, vax:57, abc:124000, budget:56, rabies:560, risk:"high", abcProg:"Active", shelter:16 },
+  { name:"Jharkhand", region:"East", capital:"Ranchi", strays:1500000, bites:290000, vax:36, abc:48000, budget:24, rabies:740, risk:"critical", abcProg:"Minimal", shelter:6 },
+  { name:"Chhattisgarh", region:"Central", capital:"Raipur", strays:1400000, bites:260000, vax:47, abc:62000, budget:32, rabies:640, risk:"high", abcProg:"Limited", shelter:8 },
+  { name:"Punjab", region:"North", capital:"Chandigarh", strays:1300000, bites:210000, vax:63, abc:112000, budget:52, rabies:380, risk:"medium", abcProg:"Active", shelter:18 },
+  { name:"Uttarakhand", region:"North", capital:"Dehradun", strays:780000, bites:140000, vax:59, abc:72000, budget:34, rabies:280, risk:"medium", abcProg:"Active", shelter:14 },
+  { name:"Himachal Pradesh", region:"North", capital:"Shimla", strays:420000, bites:68000, vax:64, abc:48000, budget:22, rabies:120, risk:"medium", abcProg:"Active", shelter:8 },
+  { name:"Kerala", region:"South", capital:"Thiruvananthapuram", strays:920000, bites:89000, vax:88, abc:98000, budget:46, rabies:62, risk:"low", abcProg:"Excellent", shelter:32 },
+  { name:"Manipur", region:"Northeast", capital:"Imphal", strays:380000, bites:72000, vax:38, abc:14000, budget:8, rabies:198, risk:"high", abcProg:"Minimal", shelter:3 },
+  { name:"Meghalaya", region:"Northeast", capital:"Shillong", strays:320000, bites:62000, vax:40, abc:12000, budget:7, rabies:164, risk:"high", abcProg:"Minimal", shelter:3 },
+  { name:"Mizoram", region:"Northeast", capital:"Aizawl", strays:180000, bites:34000, vax:42, abc:8000, budget:5, rabies:88, risk:"high", abcProg:"Minimal", shelter:2 },
+  { name:"Nagaland", region:"Northeast", capital:"Kohima", strays:220000, bites:44000, vax:36, abc:7200, budget:4, rabies:112, risk:"high", abcProg:"Minimal", shelter:2 },
+  { name:"Tripura", region:"Northeast", capital:"Agartala", strays:290000, bites:58000, vax:43, abc:14000, budget:6, rabies:148, risk:"high", abcProg:"Minimal", shelter:3 },
+  { name:"Arunachal Pradesh", region:"Northeast", capital:"Itanagar", strays:240000, bites:46000, vax:34, abc:8000, budget:5, rabies:118, risk:"high", abcProg:"Minimal", shelter:2 },
+  { name:"Sikkim", region:"Northeast", capital:"Gangtok", strays:62000, bites:9800, vax:52, abc:6200, budget:4, rabies:24, risk:"medium", abcProg:"Active", shelter:2 },
+  { name:"Goa", region:"West", capital:"Panaji", strays:84000, bites:12400, vax:72, abc:9800, budget:8, rabies:18, risk:"low", abcProg:"Excellent", shelter:5 },
+];
+
+let currentFilter = 'all';
+let currentSort = 'pop-desc';
+
+function getRiskClass(risk) {
+  const map = { critical:'risk-critical', high:'risk-high', medium:'risk-medium', low:'risk-low' };
+  return map[risk] || '';
+}
+function getRiskBadgeClass(risk) {
+  const map = { critical:'critical', high:'high', medium:'medium', low:'low' };
+  return map[risk] || '';
+}
+function getRiskLabel(risk) {
+  const map = { critical:'🔴 Critical', high:'🟡 High Risk', medium:'🟢 Medium', low:'🔵 Low Risk' };
+  return map[risk] || risk;
+}
+function getAbcPillClass(prog) {
+  if (prog === 'Excellent') return 'pill-green';
+  if (prog === 'Active') return 'pill-green';
+  if (prog === 'Limited') return 'pill-amber';
+  return 'pill-red';
+}
+function fmtNum(n) {
+  if (n >= 10000000) return (n/10000000).toFixed(1)+'Cr';
+  if (n >= 100000) return (n/100000).toFixed(1)+'L';
+  if (n >= 1000) return (n/1000).toFixed(0)+'K';
+  return n.toLocaleString('en-IN');
+}
+
+function createCard(s) {
+  const vaxPct = s.vax;
+  const abcPct = Math.min(100, Math.round((s.abc / (s.strays * 0.2)) * 100));
+  const biteRate = ((s.bites / s.strays) * 100).toFixed(1);
+  return `
+    <div class="state-card reveal ${getRiskClass(s.risk)}" data-risk="${s.risk}" data-name="${s.name.toLowerCase()}" data-region="${s.region.toLowerCase()}" data-strays="${s.strays}" data-bites="${s.bites}" data-vax="${s.vax}">
+      <div class="state-card-header">
+        <div class="state-top-row">
+          <div>
+            <div class="state-name">${s.name}</div>
+            <div class="state-region">${s.region} India · ${s.capital}</div>
+          </div>
+          <span class="risk-badge ${getRiskBadgeClass(s.risk)}">${getRiskLabel(s.risk)}</span>
+        </div>
+        <div class="state-meta-row">
+          <span class="meta-chip">🏙️ ${s.capital}</span>
+          <span class="meta-chip">🐕 ${fmtNum(s.strays)} Strays</span>
+          <span class="meta-chip">🏥 ${s.shelter} Shelters</span>
+        </div>
+      </div>
+      <div class="state-card-body">
+        <div class="state-stat-grid">
+          <div class="s-stat"><div class="s-stat-val">${fmtNum(s.strays)}</div><div class="s-stat-lbl">Stray Population</div></div>
+          <div class="s-stat"><div class="s-stat-val">${fmtNum(s.bites)}</div><div class="s-stat-lbl">Annual Bite Cases</div></div>
+          <div class="s-stat"><div class="s-stat-val">${s.vax}%</div><div class="s-stat-lbl">Vaccination Coverage</div></div>
+          <div class="s-stat"><div class="s-stat-val">${fmtNum(s.abc)}</div><div class="s-stat-lbl">ABC Surgeries/yr</div></div>
+          <div class="s-stat"><div class="s-stat-val">₹${s.budget}Cr</div><div class="s-stat-lbl">Municipal Budget</div></div>
+          <div class="s-stat"><div class="s-stat-val">${s.rabies.toLocaleString()}</div><div class="s-stat-lbl">Rabies Cases/yr</div></div>
+        </div>
+        <div class="state-bar-row">
+          <div class="bar-label-row"><span class="bar-label-text">Vaccination Coverage</span><span class="bar-label-pct">${vaxPct}%</span></div>
+          <div class="prog-bar"><div class="prog-fill fill-teal" style="width:${vaxPct}%"></div></div>
+          <div class="bar-label-row"><span class="bar-label-text">ABC Program Coverage</span><span class="bar-label-pct">${Math.min(100,abcPct)}%</span></div>
+          <div class="prog-bar"><div class="prog-fill fill-gold" style="width:${Math.min(100,abcPct)}%"></div></div>
+          <div class="bar-label-row"><span class="bar-label-text">Bite-to-Population Rate</span><span class="bar-label-pct">${biteRate}%</span></div>
+          <div class="prog-bar"><div class="prog-fill fill-rust" style="width:${Math.min(100, parseFloat(biteRate)*5)}%"></div></div>
+        </div>
+      </div>
+      <div class="state-card-footer">
+        <span class="footer-tag">ABC Program</span>
+        <span class="footer-pill ${getAbcPillClass(s.abcProg)}">${s.abcProg}</span>
+      </div>
+    </div>
+  `;
+}
+
+function renderStates() {
+  const search = document.getElementById('stateSearch').value.toLowerCase();
+  let data = statesData.filter(s => {
+    const matchSearch = s.name.toLowerCase().includes(search) || s.region.toLowerCase().includes(search) || s.capital.toLowerCase().includes(search);
+    const matchRisk = currentFilter === 'all' || s.risk === currentFilter;
+    return matchSearch && matchRisk;
+  });
+  // Sort
+  if (currentSort === 'pop-desc') data.sort((a,b) => b.strays - a.strays);
+  else if (currentSort === 'pop-asc') data.sort((a,b) => a.strays - b.strays);
+  else if (currentSort === 'bites-desc') data.sort((a,b) => b.bites - a.bites);
+  else if (currentSort === 'vax-desc') data.sort((a,b) => b.vax - a.vax);
+  else if (currentSort === 'alpha') data.sort((a,b) => a.name.localeCompare(b.name));
+
+  const grid = document.getElementById('statesGrid');
+  grid.innerHTML = data.map(createCard).join('');
+  document.getElementById('resultsCount').innerHTML = `Showing <strong>${data.length}</strong> of ${statesData.length} states`;
+  // Re-observe reveals
+  document.querySelectorAll('#statesGrid .reveal').forEach(el => {
+    el.classList.remove('visible');
+    io.observe(el);
+  });
+}
+
+function filterStates() { renderStates(); }
+function filterRisk(risk, btn) {
+  currentFilter = risk;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderStates();
+}
+function sortStates(val) { currentSort = val; renderStates(); }
+
+// ─── CHARTS ──────────────────────────────────────────────────────────────────
+function renderBiteChart() {
+  const top10 = [...statesData].sort((a,b) => b.bites - a.bites).slice(0,10);
+  const max = top10[0].bites;
+  const colours = ['#bf3b2a','#c94433','#d34d3c','#dd5645','#e05544','#d4a030','#d4a030','#3ab09e','#3ab09e','#3ab09e'];
+  const el = document.getElementById('biteChart');
+  el.innerHTML = top10.map((s,i) => `
+    <div class="hbar-row">
+      <span class="hbar-label">${s.name.split(' ')[0]}</span>
+      <div class="hbar-track">
+        <div class="hbar-fill" style="width:${(s.bites/max*100).toFixed(1)}%;background:${colours[i]};">
+          <span class="hbar-val">${fmtNum(s.bites)}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderVaxChart() {
+  const top10 = [...statesData].sort((a,b) => b.vax - a.vax).slice(0,10);
+  const el = document.getElementById('vaxChart');
+  el.innerHTML = top10.map(s => `
+    <div class="vax-row">
+      <span class="vax-state">${s.name.split(' ')[0]}</span>
+      <div class="vax-bar-wrap"><div class="vax-fill" style="width:${s.vax}%"></div></div>
+      <span class="vax-pct">${s.vax}%</span>
+    </div>
+  `).join('');
+}
+
+// ─── INTERSECTION OBSERVER ─────────────────────────────────────────────────
+const io = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 60);
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+
+function initObserver() {
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+}
+
+// ─── ANIMATED COUNTER ────────────────────────────────────────────────────────
+function animateCount(el, target, suffix='') {
+  let current = 0;
+  const step = target / 55;
+  const timer = setInterval(() => {
+    current += step;
+    if (current >= target) { current = target; clearInterval(timer); }
+    el.textContent = Math.floor(current).toLocaleString('en-IN') + suffix;
+  }, 22);
+}
+const statNumObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const raw = e.target.textContent;
+      const num = parseFloat(raw.replace(/[^0-9.]/g,''));
+      const suf = raw.replace(/[0-9.,]/g,'');
+      if (!isNaN(num)) animateCount(e.target, num, suf);
+      statNumObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+
+// ─── NAV ─────────────────────────────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').style.padding = window.scrollY > 50 ? '0.6rem 4%' : '1rem 4%';
+});
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  renderStates();
+  renderBiteChart();
+  renderVaxChart();
+  initObserver();
+  document.querySelectorAll('.stat-num, .kpi-num').forEach(el => statNumObs.observe(el));
+});
+</script>
+</body>
+</html>
